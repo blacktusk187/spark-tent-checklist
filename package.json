@@ -2,6 +2,9 @@
   "name": "spark-list",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -9,6 +12,9 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@radix-ui/react-checkbox": "^1.3.3",
+    "@radix-ui/react-label": "^2.1.8",
+    "@radix-ui/react-progress": "^1.1.8",
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3"
