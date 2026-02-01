@@ -57,9 +57,11 @@ export default function ChecklistPage() {
   };
 
   const handleReset = () => {
-    if (tentSize && confirm('Are you sure you want to reset all checkmarks?')) {
+    if (tentSize && confirm('Are you sure you want to reset all checkmarks and ballast type?')) {
       clearChecklistState(tentSize);
       setState({});
+      setBallastType(null);
+      localStorage.removeItem(`spark-checklist-ballast-${tentSize}`);
     }
   };
 

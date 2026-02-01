@@ -18,6 +18,8 @@ const commonSections = [
       { id: 'cleaning-products', name: 'Cleaning products' },
       { id: 'towels', name: 'Towels' },
       { id: 'extra-ladders', name: 'Extra Ladders' },
+      { id: 'top-tension-straps', name: 'Top Tension Straps' },
+      { id: 'ballast-tension-straps', name: 'Ballast Tension Straps' },
     ],
   },
   {
