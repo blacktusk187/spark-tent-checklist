@@ -193,7 +193,7 @@ export default function ChecklistPage() {
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
-            Concrete
+            Concrete / Water Barrels
           </button>
         </div>
       </div>
@@ -215,7 +215,7 @@ export default function ChecklistPage() {
       
       {!ballastType && (
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 text-center">
-          <p className="text-gray-600">Please select a ballast type (Stakes or Concrete) to view the checklist.</p>
+          <p className="text-gray-600">Please select a ballast type (Stakes or Concrete / Water Barrels) to view the checklist.</p>
         </div>
       )}
     </div>
