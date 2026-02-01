@@ -3,12 +3,12 @@
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { getAllTentSizes } from '@/lib/checklist-data';
+import { getTentSizesByGroup } from '@/lib/checklist-data';
 import { TentSize } from '@/types/checklist';
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const tentSizes = getAllTentSizes();
+  const { '30x': sizes30x, '40x': sizes40x } = getTentSizesByGroup();
   const currentSize = pathname?.startsWith('/checklist/')
     ? (pathname.replace('/checklist/', '') as TentSize)
     : null;
@@ -38,11 +38,11 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         <div className="flex-1 flex min-h-0 items-start bg-[#f3f2ef]">
           {/* Left sidebar - all corners rounded, matches height of main content */}
           <aside className="w-56 shrink-0 bg-white border border-gray-200 px-4 pt-4 sm:pt-6 pb-4 hidden sm:block rounded-2xl mx-4 sm:mx-6 self-stretch">
-            <nav className="space-y-1">
+            <nav className="space-y-3">
               <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-3 py-2">
-                Tent size
+                30x Frame Tent
               </div>
-              {tentSizes.map((size) => {
+              {sizes30x.map((size) => {
                 const href = `/checklist/${size}`;
                 const isActive = currentSize === size;
                 return (
@@ -50,13 +50,28 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                     key={size}
                     href={href}
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                      isActive
-                        ? 'bg-gray-100 text-gray-900'
-                        : 'text-gray-700 hover:bg-gray-50'
+                      isActive ? 'bg-gray-100 text-gray-900' : 'text-gray-700 hover:bg-gray-50'
                     }`}
                   >
                     <span>{size}</span>
-                    <span className="text-gray-400 text-xs">Frame</span>
+                  </Link>
+                );
+              })}
+              <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-3 py-2 pt-2">
+                40x Frame Tent
+              </div>
+              {sizes40x.map((size) => {
+                const href = `/checklist/${size}`;
+                const isActive = currentSize === size;
+                return (
+                  <Link
+                    key={size}
+                    href={href}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                      isActive ? 'bg-gray-100 text-gray-900' : 'text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    <span>{size}</span>
                   </Link>
                 );
               })}
@@ -72,7 +87,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         {/* Mobile: tent selector at bottom when no sidebar */}
         <div className="sm:hidden bg-white border-t border-gray-200 px-4 py-3">
           <div className="flex gap-2 overflow-x-auto pb-1">
-            {tentSizes.map((size) => {
+            {[...sizes30x, ...sizes40x].map((size) => {
               const isActive = currentSize === size;
               return (
                 <Link

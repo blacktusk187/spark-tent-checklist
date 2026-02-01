@@ -1,4 +1,12 @@
-export type TentSize = '30x30' | '30x45' | '30x60' | '30x75';
+export type TentSize =
+  | '30x30'
+  | '30x45'
+  | '30x60'
+  | '30x75'
+  | '40x40'
+  | '40x60'
+  | '40x80'
+  | '40x100';
 
 export interface ChecklistItem {
   id: string;

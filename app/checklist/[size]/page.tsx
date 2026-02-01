@@ -157,6 +157,10 @@ export default function ChecklistPage() {
       '30x45': { stakes: 24, concrete: 12 },
       '30x60': { stakes: 32, concrete: 16 },
       '30x75': { stakes: 40, concrete: 20 },
+      '40x40': { stakes: 20, concrete: 10 },
+      '40x60': { stakes: 28, concrete: 14 },
+      '40x80': { stakes: 36, concrete: 18 },
+      '40x100': { stakes: 44, concrete: 22 },
     };
     const config = sizeMap[tentSize];
 

@@ -54,6 +54,10 @@ const getSpecificHardware = (size: TentSize): { id: string; title: string; items
     '30x45': { length: 45, hipEnds: 2, hipCorners: 4, hipMids: 4, rafters: 4, eaves: 12, legs: 12, ridgeConnectors: 1, cornerConnectors: 4, perimeterConnectors: 6, braceBars: 7, tensioningStraps: 12, ballastingStraps: 12, stakes: 24, concrete: 12 },
     '30x60': { length: 60, hipEnds: 2, hipCorners: 4, hipMids: 6, rafters: 6, eaves: 16, legs: 16, ridgeConnectors: 1, cornerConnectors: 4, perimeterConnectors: 8, braceBars: 9, tensioningStraps: 16, ballastingStraps: 16, stakes: 32, concrete: 16 },
     '30x75': { length: 75, hipEnds: 2, hipCorners: 4, hipMids: 8, rafters: 8, eaves: 20, legs: 20, ridgeConnectors: 1, cornerConnectors: 4, perimeterConnectors: 10, braceBars: 11, tensioningStraps: 20, ballastingStraps: 20, stakes: 40, concrete: 20 },
+    '40x40': { length: 40, hipEnds: 2, hipCorners: 4, hipMids: 2, rafters: 2, eaves: 10, legs: 10, ridgeConnectors: 1, cornerConnectors: 4, perimeterConnectors: 5, braceBars: 6, tensioningStraps: 10, ballastingStraps: 10, stakes: 20, concrete: 10 },
+    '40x60': { length: 60, hipEnds: 2, hipCorners: 4, hipMids: 4, rafters: 4, eaves: 14, legs: 14, ridgeConnectors: 1, cornerConnectors: 4, perimeterConnectors: 7, braceBars: 8, tensioningStraps: 14, ballastingStraps: 14, stakes: 28, concrete: 14 },
+    '40x80': { length: 80, hipEnds: 2, hipCorners: 4, hipMids: 6, rafters: 6, eaves: 18, legs: 18, ridgeConnectors: 1, cornerConnectors: 4, perimeterConnectors: 9, braceBars: 10, tensioningStraps: 18, ballastingStraps: 18, stakes: 36, concrete: 18 },
+    '40x100': { length: 100, hipEnds: 2, hipCorners: 4, hipMids: 8, rafters: 8, eaves: 22, legs: 22, ridgeConnectors: 1, cornerConnectors: 4, perimeterConnectors: 11, braceBars: 12, tensioningStraps: 22, ballastingStraps: 22, stakes: 44, concrete: 22 },
   };
 
   const config = sizeMap[size];
@@ -87,5 +91,12 @@ export const getChecklist = (size: TentSize): TentChecklist => {
 };
 
 export const getAllTentSizes = (): TentSize[] => {
-  return ['30x30', '30x45', '30x60', '30x75'];
+  return ['30x30', '30x45', '30x60', '30x75', '40x40', '40x60', '40x80', '40x100'];
+};
+
+export const getTentSizesByGroup = (): { '30x': TentSize[]; '40x': TentSize[] } => {
+  return {
+    '30x': ['30x30', '30x45', '30x60', '30x75'],
+    '40x': ['40x40', '40x60', '40x80', '40x100'],
+  };
 };
