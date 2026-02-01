@@ -5,13 +5,39 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { getChecklist, getAllTentSizes } from '@/lib/checklist-data';
 import { loadChecklistState, saveChecklistState, clearChecklistState } from '@/lib/storage';
-import { TentSize, ChecklistState, ChecklistItem } from '@/types/checklist';
+import { TentSize, ChecklistState, ChecklistItem, ChecklistSection as ChecklistSectionType } from '@/types/checklist';
 import ChecklistSection from '@/components/ChecklistSection';
 import ProgressBar from '@/components/ProgressBar';
 
 function flattenSectionItems(items: ChecklistItem[]): ChecklistItem[] {
   return items.flatMap((item) => [item, ...(item.subItems ?? [])]);
 }
+
+const WALLS_SECTION: ChecklistSectionType = {
+  id: 'walls',
+  title: 'Walls',
+  items: [
+    { id: 'walls-item-walls', name: 'Walls' },
+    { id: 'walls-ladders-x2', name: 'Ladders x2' },
+    { id: 'walls-tarp-20x20-x2', name: 'Tarp 20x20 x2' },
+    { id: 'walls-gorilla-tape', name: 'White / Clear Gorilla Tape' },
+  ],
+};
+
+const LIGHTING_SECTION: ChecklistSectionType = {
+  id: 'lighting',
+  title: 'Lighting',
+  items: [
+    { id: 'lighting-item', name: 'Lighting' },
+    { id: 'lighting-power-cables', name: 'Power Extension Cables' },
+    { id: 'lighting-dimmer', name: 'Dimmer - if ordered' },
+    { id: 'lighting-ladders-x2', name: 'Ladders x2' },
+    { id: 'lighting-dongles', name: 'Dongles' },
+    { id: 'lighting-electrical-tape', name: 'White Electrical Tape' },
+    { id: 'lighting-zip-ties', name: 'White Zip Ties' },
+    { id: 'lighting-cutters', name: 'Cutters' },
+  ],
+};
 
 export default function ChecklistPage() {
   const params = useParams();
@@ -23,15 +49,24 @@ export default function ChecklistPage() {
   const checklist = tentSize ? getChecklist(tentSize) : null;
   const [state, setState] = useState<ChecklistState>({});
   const [ballastType, setBallastType] = useState<'stakes' | 'concrete' | null>(null);
+  const [wallsOption, setWallsOption] = useState<'yes' | 'no' | null>(null);
+  const [lightingOption, setLightingOption] = useState<'yes' | 'no' | null>(null);
 
   useEffect(() => {
     if (tentSize) {
       const savedState = loadChecklistState(tentSize);
       setState(savedState);
-      // Load ballast type preference
       const savedBallastType = localStorage.getItem(`spark-checklist-ballast-${tentSize}`) as 'stakes' | 'concrete' | null;
       if (savedBallastType === 'stakes' || savedBallastType === 'concrete') {
         setBallastType(savedBallastType);
+      }
+      const savedWalls = localStorage.getItem(`spark-checklist-walls-${tentSize}`) as 'yes' | 'no' | null;
+      if (savedWalls === 'yes' || savedWalls === 'no') {
+        setWallsOption(savedWalls);
+      }
+      const savedLighting = localStorage.getItem(`spark-checklist-lighting-${tentSize}`) as 'yes' | 'no' | null;
+      if (savedLighting === 'yes' || savedLighting === 'no') {
+        setLightingOption(savedLighting);
       }
     }
   }, [tentSize]);
@@ -47,9 +82,11 @@ export default function ChecklistPage() {
   };
 
   const handleSectionCheckChange = (sectionId: string, checked: boolean) => {
-    if (!checklist) return;
-    const allSections = [...checklist.commonSections, ...checklist.specificSections];
-    const section = allSections.find((s) => s.id === sectionId);
+    const section = sectionId === 'walls'
+      ? WALLS_SECTION
+      : sectionId === 'lighting'
+        ? LIGHTING_SECTION
+        : [...(checklist?.commonSections ?? []), ...(checklist?.specificSections ?? [])].find((s) => s.id === sectionId);
     if (!section) return;
     const flatItems = flattenSectionItems(section.items);
     setState((prev) => {
@@ -62,19 +99,31 @@ export default function ChecklistPage() {
   };
 
   const handleReset = () => {
-    if (tentSize && confirm('Are you sure you want to reset all checkmarks and ballast type?')) {
+    if (tentSize && confirm('Are you sure you want to reset all checkmarks, ballast type, walls, and lighting?')) {
       clearChecklistState(tentSize);
       setState({});
       setBallastType(null);
+      setWallsOption(null);
+      setLightingOption(null);
       localStorage.removeItem(`spark-checklist-ballast-${tentSize}`);
+      localStorage.removeItem(`spark-checklist-walls-${tentSize}`);
+      localStorage.removeItem(`spark-checklist-lighting-${tentSize}`);
     }
   };
 
   const handleBallastTypeChange = (type: 'stakes' | 'concrete') => {
     setBallastType(type);
-    if (tentSize) {
-      localStorage.setItem(`spark-checklist-ballast-${tentSize}`, type);
-    }
+    if (tentSize) localStorage.setItem(`spark-checklist-ballast-${tentSize}`, type);
+  };
+
+  const handleWallsChange = (value: 'yes' | 'no') => {
+    setWallsOption(value);
+    if (tentSize) localStorage.setItem(`spark-checklist-walls-${tentSize}`, value);
+  };
+
+  const handleLightingChange = (value: 'yes' | 'no') => {
+    setLightingOption(value);
+    if (tentSize) localStorage.setItem(`spark-checklist-lighting-${tentSize}`, value);
   };
 
   if (!tentSize || !checklist) {
@@ -98,49 +147,62 @@ export default function ChecklistPage() {
   const filteredSections = useMemo(() => {
     if (!checklist || !ballastType) return [];
     
-    // Filter out stakes and concrete sections, then add the selected one
+    // Start with common sections (excluding stakes and concrete)
     const sections = checklist.commonSections.filter(
       s => s.id !== 'stakes' && s.id !== 'concrete'
     );
-    
-    // Add the selected ballast section
-    if (ballastType === 'stakes') {
-      const stakesSection = checklist.commonSections.find(s => s.id === 'stakes');
-      if (stakesSection) sections.push(stakesSection);
-    } else if (ballastType === 'concrete') {
-      const concreteSection = checklist.commonSections.find(s => s.id === 'concrete');
-      if (concreteSection) sections.push(concreteSection);
-    }
-    
-    // Add specific hardware section with updated ballast item
+
+    const sizeMap: Record<TentSize, { stakes: number; concrete: number }> = {
+      '30x30': { stakes: 16, concrete: 8 },
+      '30x45': { stakes: 24, concrete: 12 },
+      '30x60': { stakes: 32, concrete: 16 },
+      '30x75': { stakes: 40, concrete: 20 },
+    };
+    const config = sizeMap[tentSize];
+
+    // Add specific hardware section (30x FRAME SPECIFIC HARDWARE) before ballast
     const specificSection = checklist.specificSections[0];
     if (specificSection) {
-      const sizeMap: Record<TentSize, { stakes: number; concrete: number }> = {
-        '30x30': { stakes: 16, concrete: 8 },
-        '30x45': { stakes: 24, concrete: 12 },
-        '30x60': { stakes: 32, concrete: 16 },
-        '30x75': { stakes: 40, concrete: 20 },
-      };
-      const config = sizeMap[tentSize];
-      
-      const updatedSpecificSection = {
-        ...specificSection,
-        items: specificSection.items.map(item => {
-          if (item.id === 'stakes-max') {
-            if (ballastType === 'stakes') {
-              return { ...item, name: `${config.stakes}x stakes (max)` };
-            } else if (ballastType === 'concrete') {
-              return { ...item, name: `${config.concrete}x concrete (max)` };
-            }
-          }
-          return item;
-        }),
-      };
-      sections.push(updatedSpecificSection);
+      sections.push(specificSection);
+    }
+
+    // Add ballast section (Stakes or Concrete / Water Barrels) below specific hardware, with size-based max item
+    if (ballastType === 'stakes') {
+      const stakesSection = checklist.commonSections.find(s => s.id === 'stakes');
+      if (stakesSection) {
+        sections.push({
+          ...stakesSection,
+          items: [
+            ...stakesSection.items,
+            { id: 'stakes-max', name: `${config.stakes}x stakes (max)` },
+          ],
+        });
+      }
+    } else if (ballastType === 'concrete') {
+      const concreteSection = checklist.commonSections.find(s => s.id === 'concrete');
+      if (concreteSection) {
+        sections.push({
+          ...concreteSection,
+          items: [
+            ...concreteSection.items,
+            { id: 'concrete-max', name: `${config.concrete}x concrete (max)` },
+          ],
+        });
+      }
+    }
+
+    // Add Walls section when Walls = Yes
+    if (wallsOption === 'yes') {
+      sections.push(WALLS_SECTION);
+    }
+
+    // Add Lighting section when Lighting = Yes
+    if (lightingOption === 'yes') {
+      sections.push(LIGHTING_SECTION);
     }
     
     return sections;
-  }, [checklist, ballastType, tentSize]);
+  }, [checklist, ballastType, tentSize, wallsOption, lightingOption]);
 
   const { totalItems, completedItems, progress } = useMemo(() => {
     if (!ballastType || filteredSections.length === 0) {
@@ -194,6 +256,64 @@ export default function ChecklistPage() {
             }`}
           >
             Concrete / Water Barrels
+          </button>
+        </div>
+      </div>
+
+      {/* Walls selector */}
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4">
+        <div className="mb-2">
+          <label className="text-sm font-semibold text-gray-700">Walls</label>
+        </div>
+        <div className="flex gap-3">
+          <button
+            onClick={() => handleWallsChange('yes')}
+            className={`flex-1 px-4 py-3 rounded-xl font-medium transition-colors ${
+              wallsOption === 'yes'
+                ? 'bg-[#E13447] text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            Yes
+          </button>
+          <button
+            onClick={() => handleWallsChange('no')}
+            className={`flex-1 px-4 py-3 rounded-xl font-medium transition-colors ${
+              wallsOption === 'no'
+                ? 'bg-[#E13447] text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            No
+          </button>
+        </div>
+      </div>
+
+      {/* Lighting selector */}
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4">
+        <div className="mb-2">
+          <label className="text-sm font-semibold text-gray-700">Lighting</label>
+        </div>
+        <div className="flex gap-3">
+          <button
+            onClick={() => handleLightingChange('yes')}
+            className={`flex-1 px-4 py-3 rounded-xl font-medium transition-colors ${
+              lightingOption === 'yes'
+                ? 'bg-[#E13447] text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            Yes
+          </button>
+          <button
+            onClick={() => handleLightingChange('no')}
+            className={`flex-1 px-4 py-3 rounded-xl font-medium transition-colors ${
+              lightingOption === 'no'
+                ? 'bg-[#E13447] text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            No
           </button>
         </div>
       </div>

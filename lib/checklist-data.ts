@@ -20,8 +20,6 @@ const commonSections = [
           { id: 'track-handles-2x', name: '2x track handles' },
         ],
       },
-      { id: 'walls', name: 'Walls' },
-      { id: 'extra-tarps', name: 'Extra tarps' },
       { id: 'cleaning-products', name: 'Cleaning products' },
       { id: 'towels', name: 'Towels' },
     ],
@@ -75,7 +73,6 @@ const getSpecificHardware = (size: TentSize): { id: string; title: string; items
       { id: 'brace-bars', name: `${config.braceBars}x brace bars` },
       { id: 'tensioning-straps', name: `${config.tensioningStraps}x Tensioning straps` },
       { id: 'ballasting-straps', name: `${config.ballastingStraps}x Ballasting Straps (max)` },
-      { id: 'stakes-max', name: `${config.stakes}x stakes (max) or ${config.concrete}x concrete (max)` },
     ],
   };
 };
