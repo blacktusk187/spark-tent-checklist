@@ -227,7 +227,7 @@ export default function ChecklistPage() {
           <h2 className="text-lg font-semibold text-gray-900">{tentSize} Frame Tent</h2>
           <button
             onClick={handleReset}
-            className="text-sm font-medium text-gray-500 hover:text-red-600 transition-colors"
+            className="rounded-full bg-[#E13447] px-4 py-1.5 text-sm font-medium text-white shadow-sm transition-opacity hover:opacity-90"
           >
             Reset all
           </button>
