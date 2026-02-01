@@ -8,21 +8,22 @@ interface ChecklistItemProps {
   item: ChecklistItemType;
   checked: boolean;
   onCheckedChange: (checked: boolean) => void;
+  isSubItem?: boolean;
 }
 
-export default function ChecklistItem({ item, checked, onCheckedChange }: ChecklistItemProps) {
+export default function ChecklistItem({ item, checked, onCheckedChange, isSubItem = false }: ChecklistItemProps) {
   return (
-    <div className="flex items-start gap-3 py-3 px-4 sm:px-5 min-h-[44px] touch-manipulation">
+    <div className={`flex items-start gap-3 min-h-[44px] touch-manipulation ${isSubItem ? 'py-2 px-3 sm:px-4' : 'py-3 px-4 sm:px-5'}`}>
       <Checkbox.Root
-        className="flex h-6 w-6 shrink-0 items-center justify-center rounded border-2 border-gray-300 bg-white transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#E13447] focus:ring-offset-2 data-[state=checked]:bg-[#E13447] data-[state=checked]:border-[#E13447]"
+        className={`flex shrink-0 items-center justify-center rounded border-2 border-gray-300 bg-white transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#E13447] focus:ring-offset-2 data-[state=checked]:bg-[#E13447] data-[state=checked]:border-[#E13447] ${isSubItem ? 'h-5 w-5' : 'h-6 w-6'}`}
         checked={checked}
         onCheckedChange={onCheckedChange}
         id={item.id}
       >
         <Checkbox.Indicator className="text-white">
           <svg
-            width="16"
-            height="16"
+            width={isSubItem ? 12 : 16}
+            height={isSubItem ? 12 : 16}
             viewBox="0 0 16 16"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -39,7 +40,7 @@ export default function ChecklistItem({ item, checked, onCheckedChange }: Checkl
       </Checkbox.Root>
       <Label.Root
         htmlFor={item.id}
-        className="flex-1 cursor-pointer text-base leading-relaxed text-gray-900 select-none"
+        className={`flex-1 cursor-pointer leading-relaxed text-gray-900 select-none ${isSubItem ? 'text-sm' : 'text-base'}`}
       >
         <span>{item.name}</span>
         {item.note && (

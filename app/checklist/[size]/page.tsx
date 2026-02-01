@@ -5,9 +5,13 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { getChecklist, getAllTentSizes } from '@/lib/checklist-data';
 import { loadChecklistState, saveChecklistState, clearChecklistState } from '@/lib/storage';
-import { TentSize, ChecklistState } from '@/types/checklist';
+import { TentSize, ChecklistState, ChecklistItem } from '@/types/checklist';
 import ChecklistSection from '@/components/ChecklistSection';
 import ProgressBar from '@/components/ProgressBar';
+
+function flattenSectionItems(items: ChecklistItem[]): ChecklistItem[] {
+  return items.flatMap((item) => [item, ...(item.subItems ?? [])]);
+}
 
 export default function ChecklistPage() {
   const params = useParams();
@@ -47,9 +51,10 @@ export default function ChecklistPage() {
     const allSections = [...checklist.commonSections, ...checklist.specificSections];
     const section = allSections.find((s) => s.id === sectionId);
     if (!section) return;
+    const flatItems = flattenSectionItems(section.items);
     setState((prev) => {
       const next = { ...prev };
-      section.items.forEach((item) => {
+      flatItems.forEach((item) => {
         next[item.id] = checked;
       });
       return next;
@@ -141,7 +146,7 @@ export default function ChecklistPage() {
     if (!ballastType || filteredSections.length === 0) {
       return { totalItems: 0, completedItems: 0, progress: 0 };
     }
-    const allItems = filteredSections.flatMap((section) => section.items);
+    const allItems = filteredSections.flatMap((section) => flattenSectionItems(section.items));
     const total = allItems.length;
     const completed = allItems.filter((item) => state[item.id]).length;
     const percentage = total > 0 ? (completed / total) * 100 : 0;

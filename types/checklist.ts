@@ -4,6 +4,7 @@ export interface ChecklistItem {
   id: string;
   name: string;
   note?: string; // Optional note like "*Charge Battery*"
+  subItems?: ChecklistItem[]; // Optional nested sub-checkboxes
 }
 
 export interface ChecklistSection {

@@ -6,20 +6,24 @@ const commonSections = [
     id: 'common-equipment',
     title: 'FOR ALL 30\' WIDE TENTS',
     items: [
-      { id: 'ladders', name: 'Ladders' },
+      { id: 'top-tension-straps', name: 'Top Tension Straps' },
+      { id: 'ballast-tension-straps', name: 'Ballast Tension Straps' },
+      { id: 'ladders', name: 'Ladders - min 2, 4 if walls' },
       { id: 'tarp-20x16', name: 'Tarp: 20x16 white' },
-      { id: 'pulling-bag', name: 'Pulling Bag' },
-      { id: 'ropes-2x', name: '2x ropes w/ carabiners' },
-      { id: 'track-guides-2x', name: '2x track guides' },
-      { id: 'keder-feeders-2x', name: '2x keder feeders' },
-      { id: 'track-handles-2x', name: '2x track handles' },
+      {
+        id: 'pulling-bag',
+        name: 'Pulling Bag',
+        subItems: [
+          { id: 'ropes-2x', name: '2x ropes w/ carabiners' },
+          { id: 'track-guides-2x', name: '2x track guides' },
+          { id: 'keder-feeders-2x', name: '2x keder feeders' },
+          { id: 'track-handles-2x', name: '2x track handles' },
+        ],
+      },
       { id: 'walls', name: 'Walls' },
       { id: 'extra-tarps', name: 'Extra tarps' },
       { id: 'cleaning-products', name: 'Cleaning products' },
       { id: 'towels', name: 'Towels' },
-      { id: 'extra-ladders', name: 'Extra Ladders' },
-      { id: 'top-tension-straps', name: 'Top Tension Straps' },
-      { id: 'ballast-tension-straps', name: 'Ballast Tension Straps' },
     ],
   },
   {
@@ -35,7 +39,7 @@ const commonSections = [
   },
   {
     id: 'concrete',
-    title: 'Concrete',
+    title: 'Concrete / Water Barrels',
     items: [
       { id: 'concrete-dolly', name: 'Concrete dolly w/ chain & hook' },
       { id: 'electric-pallet-jack', name: 'Electric pallet jack', note: '*Charge Battery*' },

@@ -1,8 +1,12 @@
 'use client';
 
 import * as Checkbox from '@radix-ui/react-checkbox';
-import { ChecklistSection as ChecklistSectionType, ChecklistState } from '@/types/checklist';
+import { ChecklistSection as ChecklistSectionType, ChecklistState, ChecklistItem as ChecklistItemType } from '@/types/checklist';
 import ChecklistItem from './ChecklistItem';
+
+function flattenItems(items: ChecklistItemType[]): ChecklistItemType[] {
+  return items.flatMap((item) => [item, ...(item.subItems ?? [])]);
+}
 
 interface ChecklistSectionProps {
   section: ChecklistSectionType;
@@ -17,7 +21,8 @@ export default function ChecklistSection({
   onItemCheckedChange,
   onSectionCheckAll,
 }: ChecklistSectionProps) {
-  const itemIds = section.items.map((i) => i.id);
+  const flatItems = flattenItems(section.items);
+  const itemIds = flatItems.map((i) => i.id);
   const checkedCount = itemIds.filter((id) => state[id]).length;
   const allChecked = itemIds.length > 0 && checkedCount === itemIds.length;
   const someChecked = checkedCount > 0;
@@ -57,19 +62,34 @@ export default function ChecklistSection({
               htmlFor={`section-${section.id}`}
               className="text-xs font-medium text-gray-600 cursor-pointer select-none"
             >
-              {allChecked ? 'All done' : someChecked ? `${checkedCount}/${section.items.length}` : 'Check all'}
+              {allChecked ? 'All done' : someChecked ? `${checkedCount}/${itemIds.length}` : 'Check all'}
             </label>
           </div>
         )}
       </div>
       <div className="divide-y divide-gray-100">
         {section.items.map((item) => (
-          <ChecklistItem
-            key={item.id}
-            item={item}
-            checked={state[item.id] || false}
-            onCheckedChange={(checked) => onItemCheckedChange(item.id, checked)}
-          />
+          <div key={item.id}>
+            <ChecklistItem
+              item={item}
+              checked={state[item.id] || false}
+              onCheckedChange={(checked) => onItemCheckedChange(item.id, checked)}
+              isSubItem={false}
+            />
+            {item.subItems && item.subItems.length > 0 && (
+              <div className="pl-8 sm:pl-10 pr-4 sm:pr-5 bg-gray-50/50 divide-y divide-gray-100">
+                {item.subItems.map((sub) => (
+                  <ChecklistItem
+                    key={sub.id}
+                    item={sub}
+                    checked={state[sub.id] || false}
+                    onCheckedChange={(checked) => onItemCheckedChange(sub.id, checked)}
+                    isSubItem
+                  />
+                ))}
+              </div>
+            )}
+          </div>
         ))}
       </div>
     </div>
