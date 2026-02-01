@@ -184,8 +184,8 @@ export default function ChecklistPage() {
         sections.push({
           ...concreteSection,
           items: [
+            { id: 'concrete-max', name: `${config.concrete}x concrete / water barrels (max)` },
             ...concreteSection.items,
-            { id: 'concrete-max', name: `${config.concrete}x concrete (max)` },
           ],
         });
       }

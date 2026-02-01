@@ -39,9 +39,10 @@ const commonSections = [
     id: 'concrete',
     title: 'Concrete / Water Barrels',
     items: [
-      { id: 'concrete-dolly', name: 'Concrete dolly w/ chain & hook' },
+      { id: 'concrete-dolly', name: 'Yellow Concrete dolly w/ chain & hook' },
       { id: 'electric-pallet-jack', name: 'Electric pallet jack', note: '*Charge Battery*' },
       { id: 'ice-torch', name: 'Possible Ice: Torch' },
+      { id: 'concrete-hose', name: 'Hose' },
     ],
   },
 ];
