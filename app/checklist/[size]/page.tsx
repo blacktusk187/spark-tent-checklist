@@ -82,11 +82,36 @@ export default function ChecklistPage() {
   };
 
   const handleSectionCheckChange = (sectionId: string, checked: boolean) => {
-    const section = sectionId === 'walls'
+    let section = sectionId === 'walls'
       ? WALLS_SECTION
       : sectionId === 'lighting'
         ? LIGHTING_SECTION
         : [...(checklist?.commonSections ?? []), ...(checklist?.specificSections ?? [])].find((s) => s.id === sectionId);
+
+    // Stakes and concrete sections have a dynamic max item added when displayed; use same shape for check-all
+    if (sectionId === 'stakes' && checklist && tentSize) {
+      const sizeMap: Record<TentSize, { stakes: number; concrete: number }> = {
+        '30x30': { stakes: 16, concrete: 8 }, '30x45': { stakes: 24, concrete: 12 }, '30x60': { stakes: 32, concrete: 16 }, '30x75': { stakes: 40, concrete: 20 },
+        '40x40': { stakes: 20, concrete: 10 }, '40x60': { stakes: 28, concrete: 14 }, '40x80': { stakes: 36, concrete: 18 }, '40x100': { stakes: 44, concrete: 22 },
+      };
+      const stakesSection = checklist.commonSections.find((s) => s.id === 'stakes');
+      if (stakesSection) {
+        section = { ...stakesSection, items: [...stakesSection.items, { id: 'stakes-max', name: `${sizeMap[tentSize].stakes}x stakes (max)` }] };
+      }
+    } else if (sectionId === 'concrete' && checklist && tentSize) {
+      const sizeMap: Record<TentSize, { stakes: number; concrete: number }> = {
+        '30x30': { stakes: 16, concrete: 8 }, '30x45': { stakes: 24, concrete: 12 }, '30x60': { stakes: 32, concrete: 16 }, '30x75': { stakes: 40, concrete: 20 },
+        '40x40': { stakes: 20, concrete: 10 }, '40x60': { stakes: 28, concrete: 14 }, '40x80': { stakes: 36, concrete: 18 }, '40x100': { stakes: 44, concrete: 22 },
+      };
+      const concreteSection = checklist.commonSections.find((s) => s.id === 'concrete');
+      if (concreteSection) {
+        section = {
+          ...concreteSection,
+          items: [{ id: 'concrete-max', name: `${sizeMap[tentSize].concrete}x concrete / water barrels (max)` }, ...concreteSection.items],
+        };
+      }
+    }
+
     if (!section) return;
     const flatItems = flattenSectionItems(section.items);
     setState((prev) => {
