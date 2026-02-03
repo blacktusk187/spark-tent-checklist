@@ -20,24 +20,24 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         {/* Logo header - card style to match other floating cards */}
         <div className="shrink-0 mt-4 sm:mt-6 mx-4 sm:mx-6">
           <header className="bg-white rounded-2xl shadow-sm border border-gray-200 px-4 py-3 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <Image
-              src="/spark-logo.png"
-              alt="Spark Event Rentals"
-              width={48}
-              height={48}
-              className="rounded-full object-contain"
-            />
-            <span className="font-semibold text-gray-800 hidden sm:inline">Spark Event Rentals</span>
-          </Link>
-          <h1 className="text-lg font-semibold text-gray-800 hidden sm:block">
-            Frame Tent Load Outs
-          </h1>
+            <Link href="/" className="flex items-center gap-2">
+              <Image
+                src="/spark-logo.png"
+                alt="Spark Event Rentals"
+                width={48}
+                height={48}
+                className="rounded-full object-contain"
+              />
+              <span className="font-semibold text-gray-800 hidden sm:inline">Spark Event Rentals</span>
+            </Link>
+            <h1 className="text-lg font-semibold text-gray-800 hidden sm:block">
+              Frame Tent Load Outs
+            </h1>
           </header>
         </div>
 
-        {/* Main: sidebar + content */}
-        <div className="flex-1 flex min-h-0 items-start bg-[#f3f2ef] mt-4">
+        {/* Main: sidebar + content (mb matches top spacing above header, below left menu) */}
+        <div className="flex-1 flex min-h-0 items-start bg-[#f3f2ef] mt-4 mb-4 sm:mb-6">
           {/* Left sidebar - all corners rounded, matches height of main content */}
           <aside className="w-56 shrink-0 bg-white border border-gray-200 px-4 pt-4 sm:pt-6 pb-4 hidden sm:block rounded-2xl mx-4 sm:mx-6 self-stretch">
             <nav className="space-y-3">
