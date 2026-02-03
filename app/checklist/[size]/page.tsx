@@ -139,7 +139,7 @@ export default function ChecklistPage() {
     localStorage.removeItem(`spark-checklist-walls-${tentSize}`);
     localStorage.removeItem(`spark-checklist-lighting-${tentSize}`);
     prevProgressRef.current = 0;
-    toast({ title: 'Checklist reset' });
+    toast({ title: 'Checklist reset', variant: 'reset' });
   };
 
   const handleBallastTypeChange = (type: 'stakes' | 'concrete') => {
@@ -252,7 +252,7 @@ export default function ChecklistPage() {
 
   useEffect(() => {
     if (progress >= 100 && prevProgressRef.current < 100) {
-      toast({ title: 'List complete!' });
+      toast({ title: 'List complete!', variant: 'complete' });
       prevProgressRef.current = 100;
     }
     if (progress < 100) {
