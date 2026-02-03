@@ -14,8 +14,8 @@ export const metadata: Metadata = {
   title: "Spark Tent Checklists",
   description: "Tent rental checklist system for Spark Event Rentals",
   icons: {
-    icon: "/spark-logo.png",
-    apple: "/spark-logo.png",
+    icon: "/spark-logo-circular.png",
+    apple: "/spark-logo-circular.png",
   },
 };
 
