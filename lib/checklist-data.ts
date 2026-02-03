@@ -49,36 +49,40 @@ const commonSections = [
 
 // Size-specific hardware sections
 const getSpecificHardware = (size: TentSize): { id: string; title: string; items: Array<{ id: string; name: string }> } => {
-  const sizeMap: Record<TentSize, { length: number; hipEnds: number; hipCorners: number; hipMids: number; rafters: number; eaves: number; legs: number; ridgeConnectors: number; cornerConnectors: number; perimeterConnectors: number; braceBars: number; tensioningStraps: number; ballastingStraps: number; stakes: number; concrete: number }> = {
-    '30x30': { length: 30, hipEnds: 2, hipCorners: 4, hipMids: 2, rafters: 2, eaves: 8, legs: 8, ridgeConnectors: 1, cornerConnectors: 4, perimeterConnectors: 4, braceBars: 5, tensioningStraps: 8, ballastingStraps: 8, stakes: 16, concrete: 8 },
-    '30x45': { length: 45, hipEnds: 2, hipCorners: 4, hipMids: 4, rafters: 4, eaves: 12, legs: 12, ridgeConnectors: 1, cornerConnectors: 4, perimeterConnectors: 6, braceBars: 7, tensioningStraps: 12, ballastingStraps: 12, stakes: 24, concrete: 12 },
-    '30x60': { length: 60, hipEnds: 2, hipCorners: 4, hipMids: 6, rafters: 6, eaves: 16, legs: 16, ridgeConnectors: 1, cornerConnectors: 4, perimeterConnectors: 8, braceBars: 9, tensioningStraps: 16, ballastingStraps: 16, stakes: 32, concrete: 16 },
-    '30x75': { length: 75, hipEnds: 2, hipCorners: 4, hipMids: 8, rafters: 8, eaves: 20, legs: 20, ridgeConnectors: 1, cornerConnectors: 4, perimeterConnectors: 10, braceBars: 11, tensioningStraps: 20, ballastingStraps: 20, stakes: 40, concrete: 20 },
-    '40x40': { length: 40, hipEnds: 2, hipCorners: 4, hipMids: 2, rafters: 2, eaves: 10, legs: 10, ridgeConnectors: 1, cornerConnectors: 4, perimeterConnectors: 5, braceBars: 6, tensioningStraps: 10, ballastingStraps: 10, stakes: 20, concrete: 10 },
-    '40x60': { length: 60, hipEnds: 2, hipCorners: 4, hipMids: 4, rafters: 4, eaves: 14, legs: 14, ridgeConnectors: 1, cornerConnectors: 4, perimeterConnectors: 7, braceBars: 8, tensioningStraps: 14, ballastingStraps: 14, stakes: 28, concrete: 14 },
-    '40x80': { length: 80, hipEnds: 2, hipCorners: 4, hipMids: 6, rafters: 6, eaves: 18, legs: 18, ridgeConnectors: 1, cornerConnectors: 4, perimeterConnectors: 9, braceBars: 10, tensioningStraps: 18, ballastingStraps: 18, stakes: 36, concrete: 18 },
-    '40x100': { length: 100, hipEnds: 2, hipCorners: 4, hipMids: 8, rafters: 8, eaves: 22, legs: 22, ridgeConnectors: 1, cornerConnectors: 4, perimeterConnectors: 11, braceBars: 12, tensioningStraps: 22, ballastingStraps: 22, stakes: 44, concrete: 22 },
+  const sizeMap: Record<TentSize, { length: number; hipEnds: number; hipCorners: number; hipMids: number; rafters: number; eaves: number; legs: number; ridgeConnectors: number; cornerConnectors: number; perimeterConnectors: number; braceBars: number; tensioningStraps: number; ballastingStraps: number; stakes: number; concrete: number; crossCables: number }> = {
+    '30x30': { length: 30, hipEnds: 2, hipCorners: 4, hipMids: 2, rafters: 2, eaves: 8, legs: 8, ridgeConnectors: 1, cornerConnectors: 4, perimeterConnectors: 4, braceBars: 5, tensioningStraps: 8, ballastingStraps: 8, stakes: 16, concrete: 8, crossCables: 1 },
+    '30x45': { length: 45, hipEnds: 2, hipCorners: 4, hipMids: 4, rafters: 4, eaves: 12, legs: 12, ridgeConnectors: 1, cornerConnectors: 4, perimeterConnectors: 6, braceBars: 7, tensioningStraps: 12, ballastingStraps: 12, stakes: 24, concrete: 12, crossCables: 2 },
+    '30x60': { length: 60, hipEnds: 2, hipCorners: 4, hipMids: 6, rafters: 6, eaves: 16, legs: 16, ridgeConnectors: 1, cornerConnectors: 4, perimeterConnectors: 8, braceBars: 9, tensioningStraps: 16, ballastingStraps: 16, stakes: 32, concrete: 16, crossCables: 3 },
+    '30x75': { length: 75, hipEnds: 2, hipCorners: 4, hipMids: 8, rafters: 8, eaves: 20, legs: 20, ridgeConnectors: 1, cornerConnectors: 4, perimeterConnectors: 10, braceBars: 11, tensioningStraps: 20, ballastingStraps: 20, stakes: 40, concrete: 20, crossCables: 4 },
+    '40x40': { length: 40, hipEnds: 2, hipCorners: 4, hipMids: 2, rafters: 2, eaves: 10, legs: 10, ridgeConnectors: 1, cornerConnectors: 4, perimeterConnectors: 5, braceBars: 6, tensioningStraps: 10, ballastingStraps: 10, stakes: 20, concrete: 10, crossCables: 1 },
+    '40x60': { length: 60, hipEnds: 2, hipCorners: 4, hipMids: 4, rafters: 4, eaves: 14, legs: 14, ridgeConnectors: 1, cornerConnectors: 4, perimeterConnectors: 7, braceBars: 8, tensioningStraps: 14, ballastingStraps: 14, stakes: 28, concrete: 14, crossCables: 2 },
+    '40x80': { length: 80, hipEnds: 2, hipCorners: 4, hipMids: 6, rafters: 6, eaves: 18, legs: 18, ridgeConnectors: 1, cornerConnectors: 4, perimeterConnectors: 9, braceBars: 10, tensioningStraps: 18, ballastingStraps: 18, stakes: 36, concrete: 18, crossCables: 3 },
+    '40x100': { length: 100, hipEnds: 2, hipCorners: 4, hipMids: 8, rafters: 8, eaves: 22, legs: 22, ridgeConnectors: 1, cornerConnectors: 4, perimeterConnectors: 11, braceBars: 12, tensioningStraps: 22, ballastingStraps: 22, stakes: 44, concrete: 22, crossCables: 4 },
   };
 
   const config = sizeMap[size];
 
+  const items: Array<{ id: string; name: string }> = [
+    { id: 'hip-end-tops', name: `${config.hipEnds}x hip end 15' wide tops` },
+    { id: 'hip-corner-rafters', name: `${config.hipCorners}x hip corner rafters` },
+    { id: 'hip-mid-rafters', name: `${config.hipMids}x hip mid rafters` },
+    { id: 'rafters', name: `${config.rafters}x rafters` },
+    { id: 'eaves', name: `${config.eaves}x eaves` },
+    { id: 'legs-base-plates', name: `${config.legs}x legs with base plates (feet)` },
+    { id: 'ridge-connector', name: `${config.ridgeConnectors}x 8 way ridge connector` },
+    { id: 'corner-connectors', name: `${config.cornerConnectors}x corner connectors` },
+    { id: 'perimeter-connectors', name: `${config.perimeterConnectors}x perimeter connectors` },
+    { id: 'brace-bars', name: `${config.braceBars}x brace bars` },
+    { id: 'tensioning-straps', name: `${config.tensioningStraps}x Tensioning straps` },
+    { id: 'ballasting-straps', name: `${config.ballastingStraps}x Ballasting Straps (max)` },
+  ];
+  if (config.crossCables > 0) {
+    items.push({ id: 'cross-cables', name: `${config.crossCables}x Cross Cables` });
+  }
   return {
     id: 'specific-hardware',
     title: `${size} FRAME SPECIFIC HARDWARE`,
-    items: [
-      { id: 'hip-end-tops', name: `${config.hipEnds}x hip end 15' wide tops` },
-      { id: 'hip-corner-rafters', name: `${config.hipCorners}x hip corner rafters` },
-      { id: 'hip-mid-rafters', name: `${config.hipMids}x hip mid rafters` },
-      { id: 'rafters', name: `${config.rafters}x rafters` },
-      { id: 'eaves', name: `${config.eaves}x eaves` },
-      { id: 'legs-base-plates', name: `${config.legs}x legs with base plates (feet)` },
-      { id: 'ridge-connector', name: `${config.ridgeConnectors}x 8 way ridge connector` },
-      { id: 'corner-connectors', name: `${config.cornerConnectors}x corner connectors` },
-      { id: 'perimeter-connectors', name: `${config.perimeterConnectors}x perimeter connectors` },
-      { id: 'brace-bars', name: `${config.braceBars}x brace bars` },
-      { id: 'tensioning-straps', name: `${config.tensioningStraps}x Tensioning straps` },
-      { id: 'ballasting-straps', name: `${config.ballastingStraps}x Ballasting Straps (max)` },
-    ],
+    items,
   };
 };
 
