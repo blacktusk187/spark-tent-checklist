@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useRef } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { getChecklist, getAllTentSizes } from '@/lib/checklist-data';
@@ -8,6 +8,8 @@ import { loadChecklistState, saveChecklistState, clearChecklistState } from '@/l
 import { TentSize, ChecklistState, ChecklistItem, ChecklistSection as ChecklistSectionType } from '@/types/checklist';
 import ChecklistSection from '@/components/ChecklistSection';
 import ProgressBar from '@/components/ProgressBar';
+import ResetConfirmModal from '@/components/ResetConfirmModal';
+import { useToast } from '@/components/ToastProvider';
 
 function flattenSectionItems(items: ChecklistItem[]): ChecklistItem[] {
   return items.flatMap((item) => [item, ...(item.subItems ?? [])]);
@@ -42,6 +44,7 @@ const LIGHTING_SECTION: ChecklistSectionType = {
 export default function ChecklistPage() {
   const params = useParams();
   const size = params.size as string;
+  const { toast } = useToast();
 
   const validSizes = getAllTentSizes();
   const tentSize = validSizes.includes(size as TentSize) ? (size as TentSize) : null;
@@ -51,6 +54,8 @@ export default function ChecklistPage() {
   const [ballastType, setBallastType] = useState<'stakes' | 'concrete' | null>(null);
   const [wallsOption, setWallsOption] = useState<'yes' | 'no' | null>(null);
   const [lightingOption, setLightingOption] = useState<'yes' | 'no' | null>(null);
+  const [resetModalOpen, setResetModalOpen] = useState(false);
+  const prevProgressRef = useRef<number>(0);
 
   useEffect(() => {
     if (tentSize) {
@@ -123,17 +128,18 @@ export default function ChecklistPage() {
     });
   };
 
-  const handleReset = () => {
-    if (tentSize && confirm('Are you sure you want to reset all checkmarks, ballast type, walls, and lighting?')) {
-      clearChecklistState(tentSize);
-      setState({});
-      setBallastType(null);
-      setWallsOption(null);
-      setLightingOption(null);
-      localStorage.removeItem(`spark-checklist-ballast-${tentSize}`);
-      localStorage.removeItem(`spark-checklist-walls-${tentSize}`);
-      localStorage.removeItem(`spark-checklist-lighting-${tentSize}`);
-    }
+  const handleResetConfirm = () => {
+    if (!tentSize) return;
+    clearChecklistState(tentSize);
+    setState({});
+    setBallastType(null);
+    setWallsOption(null);
+    setLightingOption(null);
+    localStorage.removeItem(`spark-checklist-ballast-${tentSize}`);
+    localStorage.removeItem(`spark-checklist-walls-${tentSize}`);
+    localStorage.removeItem(`spark-checklist-lighting-${tentSize}`);
+    prevProgressRef.current = 0;
+    toast({ title: 'Checklist reset' });
   };
 
   const handleBallastTypeChange = (type: 'stakes' | 'concrete') => {
@@ -244,6 +250,16 @@ export default function ChecklistPage() {
     return { totalItems: total, completedItems: completed, progress: percentage };
   }, [filteredSections, state, ballastType]);
 
+  useEffect(() => {
+    if (progress >= 100 && prevProgressRef.current < 100) {
+      toast({ title: 'List complete!' });
+      prevProgressRef.current = 100;
+    }
+    if (progress < 100) {
+      prevProgressRef.current = progress;
+    }
+  }, [progress, toast]);
+
   return (
     <div className="max-w-2xl mx-auto space-y-4">
       {/* Progress card */}
@@ -251,7 +267,7 @@ export default function ChecklistPage() {
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-lg font-semibold text-gray-900">{tentSize} Frame Tent</h2>
           <button
-            onClick={handleReset}
+            onClick={() => setResetModalOpen(true)}
             className="rounded-full bg-[#E13447] px-4 py-1.5 text-sm font-medium text-white shadow-sm transition-opacity hover:opacity-90"
           >
             Reset all
@@ -367,6 +383,12 @@ export default function ChecklistPage() {
           ))}
         </div>
       )}
+
+      <ResetConfirmModal
+        open={resetModalOpen}
+        onOpenChange={setResetModalOpen}
+        onConfirm={handleResetConfirm}
+      />
     </div>
   );
 }
