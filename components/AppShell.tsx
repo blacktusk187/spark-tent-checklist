@@ -80,8 +80,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             </nav>
           </aside>
 
-          {/* Center column - main content */}
-          <main className="flex-1 min-w-0 bg-[#f3f2ef] px-4 sm:px-6 pb-4 sm:pb-6 overflow-auto min-h-full">
+          {/* Center column - main content (mr matches header inset so right edge aligns) */}
+          <main className="flex-1 min-w-0 bg-[#f3f2ef] px-4 sm:px-6 pb-4 sm:pb-6 mr-4 sm:mr-6 overflow-auto min-h-full">
             {children}
           </main>
         </div>
