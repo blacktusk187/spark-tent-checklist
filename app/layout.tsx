@@ -12,6 +12,10 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: "Spark Tent Checklists",
   description: "Tent rental checklist system for Spark Event Rentals",
+  icons: {
+    icon: "/spark-logo.png",
+    apple: "/spark-logo.png",
+  },
 };
 
 export default function RootLayout({

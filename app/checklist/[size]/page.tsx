@@ -260,6 +260,12 @@ export default function ChecklistPage() {
         <ProgressBar value={progress} total={totalItems} completed={completedItems} />
       </div>
 
+      {!ballastType && (
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 text-center">
+          <p className="text-gray-600">Please select a ballast type (Stakes or Concrete / Water Barrels) to view the checklist.</p>
+        </div>
+      )}
+
       {/* Ballast type selector */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4">
         <div className="mb-2">
@@ -359,12 +365,6 @@ export default function ChecklistPage() {
               onSectionCheckAll={(checked) => handleSectionCheckChange(section.id, checked)}
             />
           ))}
-        </div>
-      )}
-      
-      {!ballastType && (
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 text-center">
-          <p className="text-gray-600">Please select a ballast type (Stakes or Concrete / Water Barrels) to view the checklist.</p>
         </div>
       )}
     </div>
